@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+ <html>
+ <head> 
+     <title>Chatbot</title>
+        <style>
+            h1 {
+                text-align: center;
+                font-size: 24px;
+                color: #333;
+            }
+            #chatbox {
+                width: 50%;
+                margin: 0 auto;
+                padding: 20px;
+                border: 1px solid #333;
+                background-color: #f9f9f9;
+                min-height: 200px;
+                max-height: 400px;
+                overflow-y: auto;
+            }
+            #user_message {
+                width: 50%;
+                margin: 0 auto;
+                padding: 10px;
+                display: block;
+                margin-top: 20px;
+            }
+            button {
+                width: 50%;
+                margin: 0 auto;
+                padding: 10px;
+                display: block;
+                margin-top: 20px;
+                background-color: #333;
+                color: #fff;
+                border: none;
+                cursor: pointer;
+            }
+            button:hover {
+                background-color: #555;
+            }
+            
+        </style>
+
+ </head>
+ <body>
+    
+        <h1>Chatbot</h1>
+         <div id="chatbox"></div>
+     <input type="text" id="user_message" placeholder="Type here...">
+     <button onclick="get_bot_response()">Send</button>
+     <script>
+        function get_bot_response() {
+            var message = document.getElementById("user_message").value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://localhost:5000/chatbot?message=" + encodeURIComponent(message));
+            //xhr.open("GET", "http://localhost:5000/chatbot"); // Replace with your API endpoint URL
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                console.log("INSIDE ONREADYSTATECHANGE ----->")
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        console.log("INSIDE IF ----->")
+                        var response = xhr.responseText
+                        console.log(" THIS IS RESPOSEN ",response);
+                        document.getElementById("chatbot").innerText = response;
+                    } else {
+                        console.error("Error:", xhr.statusText);
+                    }
+                }
+            };
+            //var message = document.getElementById("user_message").value;
+            xhr.send();
+        }
+
+     </script>
+     <!-- <script>
+        function get_bot_response() {
+             var user_message = document.getElementById("user_message").value;
+            document.getElementById("chatbox").innerHTML += "You: " + user_message + "<br>";
+             var xhr = new XMLHttpRequest();
+             xhr.open("GET", "http://localhost:5000/chatbot", false);
+             xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+             xhr.onreadystatechange = function () {
+                 if (xhr.readyState == 4 && xhr.status == 200) {
+                     var response = xhr.responseText;
+                     document.getElementById("chatbox").innerHTML += "Bot: " + response + "<br>";
+                 }
+             };
+             xhr.send("user_message=" + user_message);
+             document.getElementById("user_message").value = "";
+         }  
+     </script> -->
+ </body>
+ </html>
